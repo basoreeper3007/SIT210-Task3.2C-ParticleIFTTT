@@ -1,0 +1,26 @@
+#include <BH1750Lib.h>
+bool isLight = false;
+
+BH1750Lib lightSensor;
+
+void setup() {
+  lightSensor.begin(BH1750LIB_MODE_CONTINUOUSHIGHRES);
+}
+
+void loop() {
+    
+    uint16_t lightIntensity = lightSensor.lightLevel();
+    String lightLevel = String(lightIntensity);
+    
+    if (lightIntensity >= 100 && isLight == false)
+    {
+        isLight = true;
+        Particle.publish("Sunlight", "Light", PRIVATE);
+    }
+    else if (lightIntensity < 100 && isLight == true)
+    {
+        isLight = false;
+        Particle.publish("Sunlight", "Dark", PRIVATE);
+    }
+  
+}
